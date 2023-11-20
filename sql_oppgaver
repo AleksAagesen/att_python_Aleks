@@ -1,0 +1,65 @@
+--DQL
+
+--problem A
+select f.title, c."name", f.description from film f 
+join film_category fc using(film_id)
+join category c using (category_id)
+where c.name = 'Horror' and f.description like '%Beautiful%'
+order by f.title
+
+--problem B
+select f.title , c."name" , f.description  from film f 
+join film_category fc using(film_id)
+join category c using (category_id)
+where c.name = 'Action' and f.description like '%Database Administrator%'
+order by f.title
+
+--problem C&D
+select f.title, c."name", f.description from film f 
+join film_category fc using(film_id)
+join category c using (category_id)
+where c.name = 'Horror' and f.description like '%Beautiful%'
+union 
+select f.title , c."name" , f.description  from film f 
+join film_category fc using(film_id)
+join category c using (category_id)
+where c.name = 'Action' and f.description like '%Database Administrator%'
+order by title
+
+--problem 2
+select c.customer_id , count(p.amount), sum(p.amount) from customer c 
+join payment p using (customer_id)
+where amount > 1.2 *(select avg(amount) from payment)
+group by c.customer_id  
+having count(p.amount) >=10
+
+--problem 3
+select a.district, c.country, count(*) as no_of_customers from country c 
+join city c2 using(country_id)
+join address a using(city_id)
+join customer c3 using(address_id)
+group by a.district , c.country_id 
+order by no_of_customers desc
+limit 5
+
+
+--DDL
+create table person(
+	ssn varchar(11) primary key,
+	last_name varchar(30),
+	first_name varchar(30),
+	mid_init varchar(10)
+);
+--composite primary key
+create table address(
+	st_address varchar(30),
+	city varchar(30),
+	state varchar(30),
+	zip varchar(4),
+	primary key(st_address, zip)
+);
+create table emp(
+	emp_info varchar(11) references person(ssn),
+	addr_info int references address(address_pkey),
+	phone varchar(8)
+);
